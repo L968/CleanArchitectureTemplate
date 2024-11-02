@@ -1,0 +1,16 @@
+services:
+  cleanarchitecturetemplate.api:
+    image: ${DOCKER_REGISTRY-}cleanarchitecturetemplate.api
+    container_name: cleanarchitecturetemplate.api
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: src/CleanArchitectureTemplate.Api/Dockerfile
+    ports:
+      - 5000:8080
+    networks:
+      - verticalslicetemplate-bridge
+
+networks:
+  cleanarchitecturetemplate-bridge:
+    driver: bridge
