@@ -12,7 +12,12 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY Directory.Build.props ./
 COPY ["src/CleanArchitectureTemplate.Api/CleanArchitectureTemplate.Api.csproj", "src/CleanArchitectureTemplate.Api/"]
+COPY ["src/CleanArchitectureTemplate.Infrastructure/CleanArchitectureTemplate.Infrastructure.csproj", "src/CleanArchitectureTemplate.Infrastructure/"]
+COPY ["src/CleanArchitectureTemplate.Application/CleanArchitectureTemplate.Application.csproj", "src/CleanArchitectureTemplate.Application/"]
+COPY ["src/CleanArchitectureTemplate.Domain/CleanArchitectureTemplate.Domain.csproj", "src/CleanArchitectureTemplate.Domain/"]
+COPY ["src/CleanArchitectureTemplate.Presentation/CleanArchitectureTemplate.Presentation.csproj", "src/CleanArchitectureTemplate.Presentation/"]
 RUN dotnet restore "./src/CleanArchitectureTemplate.Api/CleanArchitectureTemplate.Api.csproj"
 COPY . .
 WORKDIR "/src/src/CleanArchitectureTemplate.Api"

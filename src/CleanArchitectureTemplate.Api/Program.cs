@@ -1,21 +1,36 @@
+using CleanArchitectureTemplate.Api.Extensions;
+using CleanArchitectureTemplate.Api.Middleware;
+using CleanArchitectureTemplate.Application;
+using CleanArchitectureTemplate.Infrastructure;
+using CleanArchitectureTemplate.Presentation.Endpoints;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddDocumentation();
+builder.Services.AddHealthChecksConfiguration();
 
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseDocumentation();
 }
+
+app.MapEndpoints();
+
+app.UseExceptionHandler(o => { });
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.MapControllers();
+app.MapHealthChecks("health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 await app.RunAsync();

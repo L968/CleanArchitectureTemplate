@@ -7,7 +7,7 @@
     <ProjectGuid>44914e98-01f0-4874-8d51-8d029217de85</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>cleanarchitecturetemplate.api</DockerServiceName>
+    <DockerServiceName>CleanArchitectureTemplate</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
