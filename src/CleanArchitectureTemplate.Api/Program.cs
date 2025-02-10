@@ -3,10 +3,11 @@ using CleanArchitectureTemplate.Api.Middleware;
 using CleanArchitectureTemplate.Application;
 using CleanArchitectureTemplate.Infrastructure;
 using CleanArchitectureTemplate.Presentation.Endpoints;
-using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
@@ -14,8 +15,13 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDocumentation();
 builder.Services.AddHealthChecksConfiguration();
+builder.Host.AddSerilogLogging();
 
 WebApplication app = builder.Build();
+
+app.UseSerilogRequestLogging();
+
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
@@ -27,10 +33,5 @@ app.MapEndpoints();
 app.UseExceptionHandler(o => { });
 
 app.UseHttpsRedirection();
-
-app.MapHealthChecks("health", new HealthCheckOptions
-{
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
 
 await app.RunAsync();

@@ -11,9 +11,7 @@ namespace CleanArchitectureTemplate.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddEndpoints(Presentation.AssemblyReference.Assembly);
 
@@ -24,7 +22,7 @@ public static class DependencyInjection
 
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        string databaseConnectionString = configuration.GetConnectionString("Database")!;
+        string databaseConnectionString = configuration.GetConnectionString("cleanarchitecturetemplate-mysqldb")!;
         var serverVersion = ServerVersion.AutoDetect(databaseConnectionString);
 
         services.AddDbContext<ProductsDbContext>(options =>

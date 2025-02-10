@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>fd95852e-20ac-47d4-9811-705fb8528b0c</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+	<PackageReference Include="Aspire.Hosting.MySql" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\CleanArchitectureTemplate.Api\CleanArchitectureTemplate.Api.csproj" />
+    <ProjectReference Include="..\..\..\src\CleanArchitectureTemplate.MigrationService\CleanArchitectureTemplate.MigrationService.csproj" />
+  </ItemGroup>
+
+</Project>

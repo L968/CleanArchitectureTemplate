@@ -6,22 +6,18 @@ internal static class DocumentationExtensions
 {
     public static IServiceCollection AddDocumentation(this IServiceCollection services)
     {
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddOpenApi();
 
         return services;
     }
 
     public static IApplicationBuilder UseDocumentation(this WebApplication app)
     {
-        app.UseSwagger(options =>
-        {
-            options.RouteTemplate = "openapi/{documentName}.json";
-        });
+        app.MapOpenApi();
 
         app.MapScalarApiReference(options => {
             options
-                .WithTitle("CleanArchitectureTemplate Api")
+                .WithTitle("VerticalSliceTemplate Api")
                 .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
         });
 
