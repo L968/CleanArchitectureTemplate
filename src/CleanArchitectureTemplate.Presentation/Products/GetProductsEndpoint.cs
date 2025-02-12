@@ -6,10 +6,10 @@ internal sealed class GetProductsEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("products", async (ISender sender) =>
+        app.MapGet("products", async (ISender sender, CancellationToken cancellationToken) =>
         {
             var query = new GetProductsQuery();
-            IEnumerable<GetProductsResponse> response = await sender.Send(query);
+            IEnumerable<GetProductsResponse> response = await sender.Send(query, cancellationToken);
 
             return Results.Ok(response);
         })

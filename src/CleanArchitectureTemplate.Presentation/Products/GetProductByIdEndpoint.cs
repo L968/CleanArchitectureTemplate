@@ -6,10 +6,10 @@ internal sealed class GetProductByIdEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("product/{id:Guid}", async (Guid id, ISender sender) =>
+        app.MapGet("product/{id:Guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
             var query = new GetProductByIdQuery(id);
-            GetProductByIdResponse? response = await sender.Send(query);
+            GetProductByIdResponse? response = await sender.Send(query, cancellationToken);
 
             return response is not null
                 ? Results.Ok(response)

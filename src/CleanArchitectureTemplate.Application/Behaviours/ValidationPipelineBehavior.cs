@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using MediatR;
+﻿using FluentValidation.Results;
 
 namespace CleanArchitectureTemplate.Application.Behaviours;
 

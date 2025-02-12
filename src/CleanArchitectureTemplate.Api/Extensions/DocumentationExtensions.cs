@@ -19,6 +19,8 @@ internal static class DocumentationExtensions
             options
                 .WithTitle("VerticalSliceTemplate Api")
                 .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+
+            options.Servers = [];
         });
 
         return app;
