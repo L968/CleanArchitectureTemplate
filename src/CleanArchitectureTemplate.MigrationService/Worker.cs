@@ -20,7 +20,7 @@ internal sealed class Worker(
         try
         {
             using IServiceScope scope = serviceProvider.CreateScope();
-            ProductsDbContext dbContext = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
+            AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             await EnsureDatabaseAsync(dbContext, stoppingToken);
             await RunMigrationAsync(dbContext, stoppingToken);
@@ -35,7 +35,7 @@ internal sealed class Worker(
         hostApplicationLifetime.StopApplication();
     }
 
-    private static async Task EnsureDatabaseAsync(ProductsDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task EnsureDatabaseAsync(AppDbContext dbContext, CancellationToken cancellationToken)
     {
         IRelationalDatabaseCreator dbCreator = dbContext.GetService<IRelationalDatabaseCreator>();
 
@@ -51,7 +51,7 @@ internal sealed class Worker(
         });
     }
 
-    private static async Task RunMigrationAsync(ProductsDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task RunMigrationAsync(AppDbContext dbContext, CancellationToken cancellationToken)
     {
         IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
@@ -63,7 +63,7 @@ internal sealed class Worker(
         });
     }
 
-    private static async Task SeedDataAsync(ProductsDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task SeedDataAsync(AppDbContext dbContext, CancellationToken cancellationToken)
     {
         IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>

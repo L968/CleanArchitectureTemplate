@@ -7,7 +7,7 @@ builder.Services.AddHostedService<Worker>();
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing.AddSource(Worker.ActivitySourceName));
 
-builder.AddMySqlDbContext<ProductsDbContext>("cleanarchitecturetemplate-mysqldb");
+builder.AddMySqlDbContext<AppDbContext>("cleanarchitecturetemplate-mysqldb");
 
 IHost host = builder.Build();
 await host.RunAsync();

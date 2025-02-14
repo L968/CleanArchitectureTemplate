@@ -25,16 +25,16 @@ public static class DependencyInjection
         string databaseConnectionString = configuration.GetConnectionString("cleanarchitecturetemplate-mysqldb")!;
         var serverVersion = ServerVersion.AutoDetect(databaseConnectionString);
 
-        services.AddDbContext<ProductsDbContext>(options =>
+        services.AddDbContext<AppDbContext>(options =>
             options
                 .UseMySql(
                     databaseConnectionString,
                     serverVersion,
-                    mysqlOptions => mysqlOptions.MigrationsAssembly(typeof(ProductsDbContext).Assembly.FullName)
+                    mysqlOptions => mysqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
                 )
         );
 
-        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ProductsDbContext>());
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
 
         services.AddScoped<IProductRepository, ProductRepository>();
     }

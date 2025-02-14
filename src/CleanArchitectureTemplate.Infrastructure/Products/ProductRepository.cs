@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitectureTemplate.Infrastructure.Products;
 
-internal sealed class ProductRepository(ProductsDbContext context) : IProductRepository
+internal sealed class ProductRepository(AppDbContext context) : IProductRepository
 {
     public async Task<IEnumerable<Product>> GetAsync(CancellationToken cancellationToken)
     {

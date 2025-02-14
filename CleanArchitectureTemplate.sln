@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitectureTemplate.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitectureTemplate.MigrationService", "src\CleanArchitectureTemplate.MigrationService\CleanArchitectureTemplate.MigrationService.csproj", "{BF22775F-7DFA-4A48-B21C-4C2164234A95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitectureTemplate.IntegrationTests", "tests\CleanArchitectureTemplate.IntegrationTests\CleanArchitectureTemplate.IntegrationTests.csproj", "{CA0EFF36-5F6F-4AD4-9278-6F316D0F6A04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{BF22775F-7DFA-4A48-B21C-4C2164234A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF22775F-7DFA-4A48-B21C-4C2164234A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF22775F-7DFA-4A48-B21C-4C2164234A95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA0EFF36-5F6F-4AD4-9278-6F316D0F6A04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA0EFF36-5F6F-4AD4-9278-6F316D0F6A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA0EFF36-5F6F-4AD4-9278-6F316D0F6A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA0EFF36-5F6F-4AD4-9278-6F316D0F6A04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +104,7 @@ Global
 		{B1EFEC62-3CEA-4E81-B618-E3DFF0416D14} = {5D569518-D48A-4222-AAAC-0921237918BD}
 		{FF0196C4-8AF5-4A54-8F6D-525474B609A6} = {5D569518-D48A-4222-AAAC-0921237918BD}
 		{BF22775F-7DFA-4A48-B21C-4C2164234A95} = {FFBBE61A-FF2F-4A4E-A41B-2C6F7951E4A0}
+		{CA0EFF36-5F6F-4AD4-9278-6F316D0F6A04} = {5A6BCE9E-223E-43E5-876A-BDFA20685C2D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80DA3F9A-1C03-4B39-B34C-BE190B7C7983}

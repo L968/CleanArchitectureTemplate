@@ -22,7 +22,7 @@ public class ApplicationTests : BaseTest
     }
 
     [Fact]
-    public void Request_ShouldHave_NameEndingWith_Command()
+    public void Request_ShouldHave_NameEndingWith_CommandOrQuery()
     {
         Types.InAssembly(ApplicationAssembly)
             .That()

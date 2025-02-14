@@ -17,7 +17,7 @@ internal static class DocumentationExtensions
 
         app.MapScalarApiReference(options => {
             options
-                .WithTitle("VerticalSliceTemplate Api")
+                .WithTitle("CleanArchitectureTemplate Api")
                 .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
 
             options.Servers = [];

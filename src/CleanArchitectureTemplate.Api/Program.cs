@@ -1,6 +1,7 @@
 using CleanArchitectureTemplate.Api.Extensions;
 using CleanArchitectureTemplate.Api.Middleware;
 using CleanArchitectureTemplate.Application;
+using CleanArchitectureTemplate.Aspire.ServiceDefaults;
 using CleanArchitectureTemplate.Infrastructure;
 using CleanArchitectureTemplate.Presentation.Endpoints;
 using Serilog;

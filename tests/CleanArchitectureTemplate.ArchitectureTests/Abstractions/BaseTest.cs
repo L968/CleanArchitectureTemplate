@@ -2,7 +2,6 @@
 
 namespace CleanArchitectureTemplate.ArchitectureTests.Abstractions;
 
-#pragma warning disable CA1515 // Consider making public types internal
 public abstract class BaseTest
 {
     protected static readonly Assembly DomainAssembly = typeof(Domain.Products.Product).Assembly;

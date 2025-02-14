@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitectureTemplate.Api.Middleware;
 
-internal sealed class GlobalExceptionHandler(
-    ILogger<GlobalExceptionHandler> logger
-    ) : IExceptionHandler
+internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
