@@ -1,5 +1,4 @@
 ﻿using CleanArchitectureTemplate.Application.Abstractions;
-using CleanArchitectureTemplate.Application.Exceptions;
 using CleanArchitectureTemplate.Domain.Products;
 
 namespace CleanArchitectureTemplate.Application.Features.Products.Commands.DeleteProduct;
@@ -8,7 +7,7 @@ internal sealed class DeleteProductHandler(
     IProductRepository repository,
     IUnitOfWork unitOfWork,
     ILogger<DeleteProductHandler> logger
-    ) : IRequestHandler<DeleteProductCommand>
+) : IRequestHandler<DeleteProductCommand>
 {
     public async Task Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
@@ -16,7 +15,7 @@ internal sealed class DeleteProductHandler(
 
         if (investmentProduct is null)
         {
-            throw new AppException($"No Product found with Id {request.Id}");
+            throw new AppException(ProductErrors.ProductNotFound(request.Id));
         }
 
         repository.Delete(investmentProduct);

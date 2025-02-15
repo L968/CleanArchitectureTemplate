@@ -1,13 +1,13 @@
-﻿using CleanArchitectureTemplate.Infrastructure.Database;
+﻿using CleanArchitectureTemplate.Infrastructure.Extensions;
 
 namespace CleanArchitectureTemplate.Api.Extensions;
 
 internal static class HealthCheckExtensions
 {
-    public static IServiceCollection AddHealthChecksConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddHealthChecksConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHealthChecks()
-            .AddDbContextCheck<AppDbContext>();
+            .AddMySql(configuration.GetConnectionStringOrThrow("cleanarchitecturetemplate-mysqldb"));
 
         return services;
     }

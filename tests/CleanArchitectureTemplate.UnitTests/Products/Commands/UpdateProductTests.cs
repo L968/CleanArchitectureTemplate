@@ -1,5 +1,6 @@
 ﻿using CleanArchitectureTemplate.Application.Abstractions;
 using CleanArchitectureTemplate.Application.Features.Products.Commands.UpdateProduct;
+using CleanArchitectureTemplate.Domain.Exceptions;
 using CleanArchitectureTemplate.Domain.Products;
 
 namespace CleanArchitectureTemplate.UnitTests.Products.Commands;
@@ -8,16 +9,15 @@ public class UpdateProductTests
 {
     private readonly Mock<IProductRepository> _repositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<ILogger<UpdateProductHandler>> _loggerMock;
     private readonly UpdateProductHandler _handler;
 
     public UpdateProductTests()
     {
         _repositoryMock = new Mock<IProductRepository>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
-        _loggerMock = new Mock<ILogger<UpdateProductHandler>>();
+        var loggerMock = new Mock<ILogger<UpdateProductHandler>>();
 
-        _handler = new UpdateProductHandler(_repositoryMock.Object, _unitOfWorkMock.Object, _loggerMock.Object);
+        _handler = new UpdateProductHandler(_repositoryMock.Object, _unitOfWorkMock.Object, loggerMock.Object);
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class UpdateProductTests
 
         // Act & Assert
         AppException exception = await Assert.ThrowsAsync<AppException>(() => _handler.Handle(command, CancellationToken.None));
-        Assert.Equal($"No Product found with Id {command.Id}", exception.Message);
+        Assert.Equal(ProductErrors.ProductNotFound(command.Id).Message, exception.Message);
 
         _repositoryMock.Verify(x => x.Update(It.IsAny<Product>()), Times.Never);
         _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);

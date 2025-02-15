@@ -8,16 +8,15 @@ public class CreateProductTests
 {
     private readonly Mock<IProductRepository> _repositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<ILogger<CreateProductHandler>> _loggerMock;
     private readonly CreateProductHandler _handler;
 
     public CreateProductTests()
     {
         _repositoryMock = new Mock<IProductRepository>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
-        _loggerMock = new Mock<ILogger<CreateProductHandler>>();
+        var loggerMock = new Mock<ILogger<CreateProductHandler>>();
 
-        _handler = new CreateProductHandler(_repositoryMock.Object, _unitOfWorkMock.Object, _loggerMock.Object);
+        _handler = new CreateProductHandler(_repositoryMock.Object, _unitOfWorkMock.Object, loggerMock.Object);
     }
 
     [Fact]

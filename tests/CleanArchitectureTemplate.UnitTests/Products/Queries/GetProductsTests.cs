@@ -6,15 +6,14 @@ namespace CleanArchitectureTemplate.UnitTests.Products.Queries;
 public class GetProductsTests
 {
     private readonly Mock<IProductRepository> _repositoryMock;
-    private readonly Mock<ILogger<GetProductsHandler>> _loggerMock;
     private readonly GetProductsHandler _handler;
 
     public GetProductsTests()
     {
         _repositoryMock = new Mock<IProductRepository>();
-        _loggerMock = new Mock<ILogger<GetProductsHandler>>();
+        var loggerMock = new Mock<ILogger<GetProductsHandler>>();
 
-        _handler = new GetProductsHandler(_repositoryMock.Object, _loggerMock.Object);
+        _handler = new GetProductsHandler(_repositoryMock.Object, loggerMock.Object);
     }
 
     [Fact]

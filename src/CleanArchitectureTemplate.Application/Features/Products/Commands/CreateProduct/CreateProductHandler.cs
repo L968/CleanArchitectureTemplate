@@ -1,5 +1,4 @@
 ﻿using CleanArchitectureTemplate.Application.Abstractions;
-using CleanArchitectureTemplate.Application.Exceptions;
 using CleanArchitectureTemplate.Domain.Products;
 
 namespace CleanArchitectureTemplate.Application.Features.Products.Commands.CreateProduct;
@@ -8,7 +7,7 @@ internal sealed class CreateProductHandler(
     IProductRepository repository,
     IUnitOfWork unitOfWork,
     ILogger<CreateProductHandler> logger
-    ) : IRequestHandler<CreateProductCommand, CreateProductResponse>
+) : IRequestHandler<CreateProductCommand, CreateProductResponse>
 {
     public async Task<CreateProductResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
@@ -16,7 +15,7 @@ internal sealed class CreateProductHandler(
 
         if (existingProduct is not null)
         {
-            throw new AppException($"A product with name \"{request.Name}\" already exists");
+            throw new AppException(ProductErrors.ProductAlreadyExists(request.Name));
         }
 
         var product = new Product(
@@ -27,7 +26,7 @@ internal sealed class CreateProductHandler(
         repository.Create(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Successfully create {@Product}", product);
+        logger.LogInformation("Successfully created {@Product}", product);
 
         return new CreateProductResponse(
             product.Id,

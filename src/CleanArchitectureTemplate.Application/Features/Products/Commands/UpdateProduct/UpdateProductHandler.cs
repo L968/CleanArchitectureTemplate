@@ -1,5 +1,4 @@
 ﻿using CleanArchitectureTemplate.Application.Abstractions;
-using CleanArchitectureTemplate.Application.Exceptions;
 using CleanArchitectureTemplate.Domain.Products;
 
 namespace CleanArchitectureTemplate.Application.Features.Products.Commands.UpdateProduct;
@@ -8,7 +7,7 @@ internal sealed class UpdateProductHandler(
     IProductRepository repository,
     IUnitOfWork unitOfWork,
     ILogger<UpdateProductHandler> logger
-    ) : IRequestHandler<UpdateProductCommand>
+) : IRequestHandler<UpdateProductCommand>
 {
     public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
@@ -16,7 +15,7 @@ internal sealed class UpdateProductHandler(
 
         if (product is null)
         {
-            throw new AppException($"No Product found with Id {request.Id}");
+            throw new AppException(ProductErrors.ProductNotFound(request.Id));
         }
 
         product.Update(

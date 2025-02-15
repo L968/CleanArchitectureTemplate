@@ -1,20 +1,21 @@
 using CleanArchitectureTemplate.Application.Features.Products.Queries.GetProductById;
+using CleanArchitectureTemplate.Domain.Exceptions;
 using CleanArchitectureTemplate.Domain.Products;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CleanArchitectureTemplate.UnitTests.Products.Queries;
 
 public class GetProductByIdTests
 {
     private readonly Mock<IProductRepository> _repositoryMock;
-    private readonly Mock<ILogger<GetProductByIdHandler>> _loggerMock;
     private readonly GetProductByIdHandler _handler;
 
     public GetProductByIdTests()
     {
         _repositoryMock = new Mock<IProductRepository>();
-        _loggerMock = new Mock<ILogger<GetProductByIdHandler>>();
+        var loggerMock = new Mock<ILogger<GetProductByIdHandler>>();
 
-        _handler = new GetProductByIdHandler(_repositoryMock.Object, _loggerMock.Object);
+        _handler = new GetProductByIdHandler(_repositoryMock.Object, loggerMock.Object);
     }
 
     [Fact]
@@ -52,6 +53,6 @@ public class GetProductByIdTests
 
         // Act & Assert
         AppException exception = await Assert.ThrowsAsync<AppException>(() => _handler.Handle(query, CancellationToken.None));
-        Assert.Equal($"Product with Id {query.Id} not found", exception.Message);
+        Assert.Equal(ProductErrors.ProductNotFound(query.Id).Message, exception.Message);
     }
 }

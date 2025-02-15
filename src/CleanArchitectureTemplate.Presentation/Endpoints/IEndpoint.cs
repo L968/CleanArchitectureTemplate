@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
-
-namespace CleanArchitectureTemplate.Presentation.Endpoints;
+﻿namespace CleanArchitectureTemplate.Presentation.Endpoints;
 
 public interface IEndpoint
 {

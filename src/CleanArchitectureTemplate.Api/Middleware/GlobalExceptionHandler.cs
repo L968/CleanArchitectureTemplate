@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
-using CleanArchitectureTemplate.Application.Exceptions;
+using CleanArchitectureTemplate.Domain;
+using CleanArchitectureTemplate.Domain.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -39,18 +40,12 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
     {
         return exception switch
         {
-            AppException appException => new ProblemDetails
-            {
-                Title = "Bad Request",
-                Detail = appException.Message,
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                Status = StatusCodes.Status400BadRequest,
-            },
+            AppException appException => CreateAppExceptionProblemDetails(appException),
             ValidationException validationException => new ValidationProblemDetails
             {
                 Title = "Validation Failed",
                 Detail = "One or more validation errors occurred.",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1",
                 Status = StatusCodes.Status400BadRequest,
                 Errors = validationException.Errors
                     .GroupBy(e => e.PropertyName)
@@ -64,6 +59,41 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1",
                 Status = StatusCodes.Status500InternalServerError,
             }
+        };
+    }
+
+    private static ProblemDetails CreateAppExceptionProblemDetails(AppException appException)
+    {
+        return new ProblemDetails
+        {
+            Title = appException.ErrorType switch
+            {
+                ErrorType.Failure => "Server Failure",
+                ErrorType.Validation => "Validation Error",
+                ErrorType.Problem => "Problem Occurred",
+                ErrorType.NotFound => "Not Found",
+                ErrorType.Conflict => "Conflict Detected",
+                _ => "An unexpected error occurred"
+            },
+            Detail = appException.Message,
+            Type = appException.ErrorType switch
+            {
+                ErrorType.Failure => "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1",
+                ErrorType.Validation => "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1",
+                ErrorType.Problem => "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1",
+                ErrorType.NotFound => "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4",
+                ErrorType.Conflict => "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8",
+                _ => "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
+            },
+            Status = appException.ErrorType switch
+            {
+                ErrorType.Failure => StatusCodes.Status500InternalServerError,
+                ErrorType.Validation => StatusCodes.Status400BadRequest,
+                ErrorType.Problem => StatusCodes.Status400BadRequest,
+                ErrorType.NotFound => StatusCodes.Status404NotFound,
+                ErrorType.Conflict => StatusCodes.Status409Conflict,
+                _ => StatusCodes.Status500InternalServerError
+            },
         };
     }
 
