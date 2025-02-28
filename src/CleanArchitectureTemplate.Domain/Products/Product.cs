@@ -1,10 +1,12 @@
 ﻿namespace CleanArchitectureTemplate.Domain.Products;
 
-public sealed class Product
+public sealed class Product : IAuditableEntity
 {
     public Guid Id { get; private init; }
     public string Name { get; private set; }
     public decimal Price { get; private set; }
+    public DateTime CreatedAtUtc { get; set; }
+    public DateTime UpdatedAtUtc { get; set; }
 
     private Product() { }
 

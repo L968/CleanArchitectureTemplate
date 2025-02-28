@@ -3,13 +3,15 @@
 namespace CleanArchitectureTemplate.Application.Features.Products.Queries.GetProductById;
 
 internal sealed class GetProductByIdHandler(
-    IProductRepository repository,
+    IAppDbContext dbContext,
     ILogger<GetProductByIdHandler> logger
 ) : IRequestHandler<GetProductByIdQuery, GetProductByIdResponse>
 {
     public async Task<GetProductByIdResponse> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
-        Product? product = await repository.GetByIdAsync(request.Id, cancellationToken);
+        Product? product = await dbContext.Products
+            .AsNoTracking()
+            .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (product is null)
         {

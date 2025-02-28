@@ -1,8 +1,6 @@
 ﻿using CleanArchitectureTemplate.Application.Abstractions;
-using CleanArchitectureTemplate.Domain.Products;
 using CleanArchitectureTemplate.Infrastructure.Database;
 using CleanArchitectureTemplate.Infrastructure.Extensions;
-using CleanArchitectureTemplate.Infrastructure.Products;
 using CleanArchitectureTemplate.Presentation.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -35,8 +33,6 @@ public static class DependencyInjection
                 )
         );
 
-        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
-
-        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
     }
 }

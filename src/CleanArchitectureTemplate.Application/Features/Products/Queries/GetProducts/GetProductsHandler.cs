@@ -3,13 +3,15 @@
 namespace CleanArchitectureTemplate.Application.Features.Products.Queries.GetProducts;
 
 internal sealed class GetProductsHandler(
-    IProductRepository repository,
+    IAppDbContext dbContext,
     ILogger<GetProductsHandler> logger
-    ) : IRequestHandler<GetProductsQuery, IEnumerable<GetProductsResponse>>
+) : IRequestHandler<GetProductsQuery, IEnumerable<GetProductsResponse>>
 {
     public async Task<IEnumerable<GetProductsResponse>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        IEnumerable<Product> products = await repository.GetAsync(cancellationToken);
+        IEnumerable<Product> products = await dbContext.Products
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
         var response = products
             .Select(p => new GetProductsResponse(

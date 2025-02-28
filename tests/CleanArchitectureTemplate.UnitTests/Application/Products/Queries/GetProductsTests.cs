@@ -1,32 +1,34 @@
 ﻿using CleanArchitectureTemplate.Application.Features.Products.Queries.GetProducts;
 using CleanArchitectureTemplate.Domain.Products;
 
-namespace CleanArchitectureTemplate.UnitTests.Products.Queries;
+namespace CleanArchitectureTemplate.UnitTests.Application.Products.Queries;
 
-public class GetProductsTests
+public class GetProductsTests : IClassFixture<AppDbContextFixture>
 {
-    private readonly Mock<IProductRepository> _repositoryMock;
+    private readonly AppDbContext _dbContext;
     private readonly GetProductsHandler _handler;
 
-    public GetProductsTests()
+    public GetProductsTests(AppDbContextFixture fixture)
     {
-        _repositoryMock = new Mock<IProductRepository>();
+        _dbContext = fixture.DbContext;
         var loggerMock = new Mock<ILogger<GetProductsHandler>>();
 
-        _handler = new GetProductsHandler(_repositoryMock.Object, loggerMock.Object);
+        _handler = new GetProductsHandler(_dbContext, loggerMock.Object);
     }
 
     [Fact]
-    public async Task ShouldReturnListOfProducts_WhenProductsExist()
+    public async Task WhenProductsExist_ShouldReturnListOfProducts()
     {
         // Arrange
-        var investmentProducts = new List<Product>
+        var products = new List<Product>
         {
             new(name: "Product A", price: 100m),
             new(name: "Product B", price: 200m),
         };
 
-        _repositoryMock.Setup(x => x.GetAsync(It.IsAny<CancellationToken>())).ReturnsAsync(investmentProducts);
+        await _dbContext.Products.AddRangeAsync(products);
+        await _dbContext.SaveChangesAsync();
+
         var query = new GetProductsQuery();
 
         // Act
@@ -35,15 +37,17 @@ public class GetProductsTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(2, result.Count());
-        Assert.Equal("Product A", result.ElementAt(0).Name);
-        Assert.Equal("Product B", result.ElementAt(1).Name);
+        Assert.Contains(result, p => p.Name == "Product A" && p.Price == 100m);
+        Assert.Contains(result, p => p.Name == "Product B" && p.Price == 200m);
     }
 
     [Fact]
-    public async Task ShouldReturnEmptyList_WhenNoProductsExist()
+    public async Task WhenNoProductsExist_ShouldReturnEmptyList()
     {
         // Arrange
-        _repositoryMock.Setup(x => x.GetAsync(It.IsAny<CancellationToken>())).ReturnsAsync([]);
+        _dbContext.Products.RemoveRange(_dbContext.Products);
+        await _dbContext.SaveChangesAsync();
+
         var query = new GetProductsQuery();
 
         // Act
