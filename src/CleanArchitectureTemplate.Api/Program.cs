@@ -18,6 +18,8 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddHealthChecksConfiguration(builder.Configuration);
 
+builder.Services.AddOpenApi();
+
 builder.Host.AddSerilogLogging();
 
 WebApplication app = builder.Build();

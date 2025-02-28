@@ -4,31 +4,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CleanArchitectureTemplate.Infrastructure.Migrations
+namespace CleanArchitectureTemplate.Infrastructure.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("MySql:CharSet", "utf8mb4");
-
             migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Price = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+                });
         }
 
         /// <inheritdoc />

@@ -9,9 +9,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.2.efcore.9.0.0" />
-	<PackageReference Include="Scalar.AspNetCore" Version="2.0.12" />
+	<PackageReference Include="Scalar.AspNetCore" Version="2.0.18" />
 	<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
   </ItemGroup>
 

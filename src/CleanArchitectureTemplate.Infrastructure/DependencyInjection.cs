@@ -5,6 +5,7 @@ using CleanArchitectureTemplate.Infrastructure.Extensions;
 using CleanArchitectureTemplate.Infrastructure.Products;
 using CleanArchitectureTemplate.Presentation.Endpoints;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,16 +24,14 @@ public static class DependencyInjection
 
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        string databaseConnectionString = configuration.GetConnectionStringOrThrow("cleanarchitecturetemplate-mysqldb")!;
+        string dbConnectionString = configuration.GetConnectionStringOrThrow(ServiceNames.PostgresDb);
 
-        var serverVersion = ServerVersion.AutoDetect(databaseConnectionString);
-
-        services.AddDbContext<AppDbContext>(options =>
+        services.AddDbContext<AppDbContext>((serviceProvider, options) =>
             options
-                .UseMySql(
-                    databaseConnectionString,
-                    serverVersion,
-                    mysqlOptions => mysqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
+                .UseNpgsql(
+                    connectionString: dbConnectionString,
+                    npgsqlOptions => npgsqlOptions
+                        .MigrationsHistoryTable(HistoryRepository.DefaultTableName, ServiceNames.DatabaseName)
                 )
         );
 
