@@ -6,7 +6,7 @@ This repository provides a template for creating .NET projects using **Clean Arc
 
 - [Clean Architecture](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures#clean-architecture) Separates business logic from implementation details, promoting independence and easy maintenance.
 - [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/): Pre-configured for containerization, allowing you to run the entire project with one command.
-- [MySQL](https://www.mysql.com/): The template uses MySQL as the default database, with easy setup through Docker.
+- [PostgreSQL](https://www.postgresql.org/): The template uses PostgreSQL as the default database, with easy setup via .NET Aspire.
 - [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/): Simplified database management with Entity Framework Core, allowing you to apply and manage migrations effortlessly.
 - [Health Checks](https://www.nuget.org/packages/AspNetCore.HealthChecks.UI.Client): Integrated health checks for monitoring the application state.
 - [FluentValidation](https://fluentvalidation.net/): Provides a clean and expressive way to validate models.
@@ -61,6 +61,17 @@ To run unit tests, execute:
 
 ```bash
  dotnet test
+```
+
+### 4. Adding Migrations
+
+1. Set "YourProjectName.Api" as your start up project.
+2. Open the Package Manager Console.
+3. Set the default project to "YourProjectName.Infrastructure".
+4. Run the following command.
+
+```bash
+Add-Migration Init -Context AppDbContext -o Database/Migrations
 ```
 
 ## API Endpoints  

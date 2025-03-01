@@ -1,4 +1,5 @@
-﻿using CleanArchitectureTemplate.Application.Features.Products.Queries.GetProducts;
+﻿using CleanArchitectureTemplate.Application;
+using CleanArchitectureTemplate.Application.Features.Products.Queries.GetProducts;
 using CleanArchitectureTemplate.Domain.Products;
 
 namespace CleanArchitectureTemplate.UnitTests.Application.Products.Queries;
@@ -17,44 +18,52 @@ public class GetProductsTests : IClassFixture<AppDbContextFixture>
     }
 
     [Fact]
-    public async Task WhenProductsExist_ShouldReturnListOfProducts()
-    {
-        // Arrange
-        var products = new List<Product>
-        {
-            new(name: "Product A", price: 100m),
-            new(name: "Product B", price: 200m),
-        };
-
-        await _dbContext.Products.AddRangeAsync(products);
-        await _dbContext.SaveChangesAsync();
-
-        var query = new GetProductsQuery();
-
-        // Act
-        IEnumerable<GetProductsResponse> result = await _handler.Handle(query, CancellationToken.None);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(2, result.Count());
-        Assert.Contains(result, p => p.Name == "Product A" && p.Price == 100m);
-        Assert.Contains(result, p => p.Name == "Product B" && p.Price == 200m);
-    }
-
-    [Fact]
-    public async Task WhenNoProductsExist_ShouldReturnEmptyList()
+    public async Task WhenProductsExist_ShouldReturnPaginatedListOfProducts()
     {
         // Arrange
         _dbContext.Products.RemoveRange(_dbContext.Products);
         await _dbContext.SaveChangesAsync();
 
-        var query = new GetProductsQuery();
+        var products = new List<Product>
+        {
+            new(name: "Product A", price: 100m),
+            new(name: "Product B", price: 200m),
+            new(name: "Product C", price: 300m)
+        };
+
+        await _dbContext.Products.AddRangeAsync(products);
+        await _dbContext.SaveChangesAsync();
+
+        var query = new GetProductsQuery(Page: 1, PageSize: 2);
 
         // Act
-        IEnumerable<GetProductsResponse> result = await _handler.Handle(query, CancellationToken.None);
+        PaginatedList<GetProductsResponse> result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Empty(result);
+        Assert.Equal(2, result.Items.Count());
+        Assert.Equal(3, result.TotalItems);
+        Assert.Equal(2, result.TotalPages);
+        Assert.Contains(result.Items, p => p.Name == "Product A" && p.Price == 100m);
+        Assert.Contains(result.Items, p => p.Name == "Product B" && p.Price == 200m);
+    }
+
+    [Fact]
+    public async Task WhenNoProductsExist_ShouldReturnEmptyPaginatedList()
+    {
+        // Arrange
+        _dbContext.Products.RemoveRange(_dbContext.Products);
+        await _dbContext.SaveChangesAsync();
+
+        var query = new GetProductsQuery(Page: 1, PageSize: 10);
+
+        // Act
+        PaginatedList<GetProductsResponse> result = await _handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result.Items);
+        Assert.Equal(0, result.TotalItems);
+        Assert.Equal(0, result.TotalPages);
     }
 }

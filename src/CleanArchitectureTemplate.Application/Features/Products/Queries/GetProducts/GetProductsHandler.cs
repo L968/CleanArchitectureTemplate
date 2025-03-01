@@ -1,28 +1,28 @@
-﻿using CleanArchitectureTemplate.Domain.Products;
-
-namespace CleanArchitectureTemplate.Application.Features.Products.Queries.GetProducts;
+﻿namespace CleanArchitectureTemplate.Application.Features.Products.Queries.GetProducts;
 
 internal sealed class GetProductsHandler(
     IAppDbContext dbContext,
     ILogger<GetProductsHandler> logger
-) : IRequestHandler<GetProductsQuery, IEnumerable<GetProductsResponse>>
+) : IRequestHandler<GetProductsQuery, PaginatedList<GetProductsResponse>>
 {
-    public async Task<IEnumerable<GetProductsResponse>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedList<GetProductsResponse>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        IEnumerable<Product> products = await dbContext.Products
+        int totalItems = await dbContext.Products.CountAsync(cancellationToken);
+
+        List<GetProductsResponse> products = await dbContext.Products
             .AsNoTracking()
+            .Skip((request.Page - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(p => new GetProductsResponse(p.Id, p.Name, p.Price))
             .ToListAsync(cancellationToken);
 
-        var response = products
-            .Select(p => new GetProductsResponse(
-                p.Id,
-                p.Name,
-                p.Price
-            ))
-            .ToList();
+        logger.LogInformation("Successfully retrieved {Count} products", products.Count);
 
-        logger.LogInformation("Successfully retrieved {Count} products", response.Count);
-
-        return response;
+        return new PaginatedList<GetProductsResponse>(
+            request.Page,
+            request.PageSize,
+            totalItems,
+            products
+        );
     }
 }
