@@ -1,4 +1,7 @@
 ﻿using System.Reflection;
+using Asp.Versioning;
+using Asp.Versioning.Builder;
+using Asp.Versioning.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -20,17 +23,22 @@ public static class EndpointExtensions
         return services;
     }
 
-    public static IApplicationBuilder MapEndpoints(this WebApplication app, RouteGroupBuilder? routeGroupBuilder = null)
+    public static IApplicationBuilder MapEndpoints(this WebApplication app)
     {
-        IEnumerable<IEndpoint> endpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();
+        ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+            .HasApiVersions(ApiVersions.Versions.Select(version => new ApiVersion(version)))
+            .ReportApiVersions()
+            .Build();
 
-        IEndpointRouteBuilder builder = routeGroupBuilder is null
-            ? app
-            : routeGroupBuilder;
+        RouteGroupBuilder group = app
+            .MapGroup("v{version:apiVersion}")
+            .WithApiVersionSet(apiVersionSet);
+
+        IEnumerable<IEndpoint> endpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();
 
         foreach (IEndpoint endpoint in endpoints)
         {
-            endpoint.MapEndpoint(builder);
+            endpoint.MapEndpoint(group);
         }
 
         return app;

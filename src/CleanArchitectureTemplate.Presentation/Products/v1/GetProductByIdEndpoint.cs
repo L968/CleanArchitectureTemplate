@@ -1,6 +1,6 @@
 ﻿using CleanArchitectureTemplate.Application.Features.Products.Queries.GetProductById;
 
-namespace CleanArchitectureTemplate.Presentation.Products;
+namespace CleanArchitectureTemplate.Presentation.Products.v1;
 
 internal sealed class GetProductByIdEndpoint : IEndpoint
 {
@@ -15,6 +15,7 @@ internal sealed class GetProductByIdEndpoint : IEndpoint
                 ? Results.Ok(response)
                 : Results.NotFound();
         })
-        .WithTags(Tags.Products);
+        .WithTags(Tags.Products)
+        .MapToApiVersion(1);
     }
 }

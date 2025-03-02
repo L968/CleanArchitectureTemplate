@@ -1,6 +1,6 @@
 ﻿using CleanArchitectureTemplate.Application.Features.Products.Commands.CreateProduct;
 
-namespace CleanArchitectureTemplate.Presentation.Products;
+namespace CleanArchitectureTemplate.Presentation.Products.v1;
 
 internal sealed class CreateProductEndpoint : IEndpoint
 {
@@ -12,6 +12,7 @@ internal sealed class CreateProductEndpoint : IEndpoint
 
             return Results.Created($"/product/{response.Id}", response);
         })
-        .WithTags(Tags.Products);
+        .WithTags(Tags.Products)
+        .MapToApiVersion(1);
     }
 }

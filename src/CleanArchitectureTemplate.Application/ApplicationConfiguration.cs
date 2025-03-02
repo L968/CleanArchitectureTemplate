@@ -11,7 +11,7 @@ public static class ApplicationConfiguration
         {
             config.RegisterServicesFromAssembly(AssemblyReference.Assembly);
 
-            config.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
+            config.AddOpenBehavior(typeof(PerformanceBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
         });
 

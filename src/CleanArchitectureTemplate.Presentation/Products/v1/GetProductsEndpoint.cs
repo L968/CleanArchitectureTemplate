@@ -2,7 +2,7 @@
 using CleanArchitectureTemplate.Application.Features.Products.Queries.GetProducts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitectureTemplate.Presentation.Products;
+namespace CleanArchitectureTemplate.Presentation.Products.v1;
 
 internal sealed class GetProductsEndpoint : IEndpoint
 {
@@ -19,6 +19,7 @@ internal sealed class GetProductsEndpoint : IEndpoint
 
                 return Results.Ok(response);
             })
-            .WithTags(Tags.Products);
+            .WithTags(Tags.Products)
+            .MapToApiVersion(1);
     }
 }

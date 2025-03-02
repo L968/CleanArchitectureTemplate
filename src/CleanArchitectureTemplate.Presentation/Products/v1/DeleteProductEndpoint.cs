@@ -1,6 +1,6 @@
 ﻿using CleanArchitectureTemplate.Application.Features.Products.Commands.DeleteProduct;
 
-namespace CleanArchitectureTemplate.Presentation.Products;
+namespace CleanArchitectureTemplate.Presentation.Products.v1;
 
 internal sealed class DeleteProductEndpoint : IEndpoint
 {
@@ -11,6 +11,7 @@ internal sealed class DeleteProductEndpoint : IEndpoint
             await mediator.Send(new DeleteProductCommand(id), cancellationToken);
             return Results.NoContent();
         })
-        .WithTags(Tags.Products);
+        .WithTags(Tags.Products)
+        .MapToApiVersion(1);
     }
 }

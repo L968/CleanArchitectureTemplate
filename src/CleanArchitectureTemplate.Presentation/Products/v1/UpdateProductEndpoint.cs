@@ -1,6 +1,6 @@
 ﻿using CleanArchitectureTemplate.Application.Features.Products.Commands.UpdateProduct;
 
-namespace CleanArchitectureTemplate.Presentation.Products;
+namespace CleanArchitectureTemplate.Presentation.Products.v1;
 
 internal sealed class UpdateProductEndpoint : IEndpoint
 {
@@ -13,6 +13,7 @@ internal sealed class UpdateProductEndpoint : IEndpoint
 
             return Results.NoContent();
         })
-        .WithTags(Tags.Products);
+        .WithTags(Tags.Products)
+        .MapToApiVersion(1);
     }
 }

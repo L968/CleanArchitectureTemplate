@@ -18,7 +18,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddHealthChecksConfiguration(builder.Configuration);
 
-builder.Services.AddOpenApi();
+builder.Services.AddDocumentation();
+
+builder.Services.AddVersioning();
 
 builder.Host.AddSerilogLogging();
 

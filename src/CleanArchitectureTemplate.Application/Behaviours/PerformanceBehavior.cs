@@ -2,7 +2,7 @@
 
 namespace CleanArchitectureTemplate.Application.Behaviours;
 
-internal sealed class PerformanceBehaviour<TRequest, TResponse>(
+internal sealed class PerformanceBehavior<TRequest, TResponse>(
     ILogger<TRequest> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
