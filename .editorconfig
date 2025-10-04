@@ -273,6 +273,9 @@ dotnet_diagnostic.CA1307.severity = none
 # CA1308: Normalize strings to uppercase
 dotnet_diagnostic.CA1308.severity = none
 
+# CA1507: Use nameof in place of string literal
+dotnet_diagnostic.CA1507.severity = warning
+
 # CA1515: Consider making public types internal
 dotnet_diagnostic.CA1515.severity = none
 
@@ -390,5 +393,3 @@ dotnet_diagnostic.S4136.severity = none
 
 # S6605: Collection-specific "Exists" method should be used instead of the "Any" extension
 dotnet_diagnostic.S6605.severity = none
-
-dotnet_diagnostic.IDE0005.severity = none
