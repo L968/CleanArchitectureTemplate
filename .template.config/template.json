@@ -7,7 +7,7 @@
     "C#"
   ],
   "identity": "CleanArchitecture.Template",
-  "name": "Vertical Slice Template",
+  "name": "Clean Architecture Template",
   "shortName": "cleanarchitecture-template",
   "sourceName": "CleanArchitecture",
   "defaultName": "CleanArchitectureProject",

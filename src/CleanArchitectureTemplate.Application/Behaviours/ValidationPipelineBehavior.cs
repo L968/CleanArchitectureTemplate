@@ -19,7 +19,7 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(
             throw new ValidationException(validationFailures);
         }
 
-        return await next();
+        return await next(cancellationToken);
     }
 
     private async Task<ValidationFailure[]> ValidateAsync(TRequest request)
