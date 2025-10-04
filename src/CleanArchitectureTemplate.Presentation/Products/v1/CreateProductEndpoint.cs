@@ -6,12 +6,19 @@ internal sealed class CreateProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("product", async (CreateProductCommand command, ISender sender, CancellationToken cancellationToken) =>
-        {
-            CreateProductResponse response = await sender.Send(command, cancellationToken);
+        app.MapPost("products",
+            async (
+                CreateProductCommand command,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                Result<CreateProductResponse> result = await sender.Send(command, cancellationToken);
 
-            return Results.Created($"/product/{response.Id}", response);
-        })
+                return result.Match(
+                    onSuccess: response => Results.Created($"/products/{response.Id}", response),
+                    onFailure: ApiResults.Problem
+                );
+            })
         .WithTags(Tags.Products)
         .MapToApiVersion(1);
     }

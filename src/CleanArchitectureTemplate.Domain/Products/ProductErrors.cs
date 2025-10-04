@@ -1,10 +1,18 @@
-﻿namespace CleanArchitectureTemplate.Domain.Products;
+﻿using CleanArchitectureTemplate.Domain.Results;
+
+namespace CleanArchitectureTemplate.Domain.Products;
 
 public static class ProductErrors
 {
     public static Error ProductAlreadyExists(string productName) =>
-        new($"A product with name \"{productName}\" already exists.", ErrorType.Conflict);
+        Error.Conflict(
+            "Product.AlreadyExists",
+            $"A product with name \"{productName}\" already exists."
+        );
 
-    public static Error ProductNotFound(Guid productId) =>
-        new($"The product with identifier \"{productId}\" was not found.", ErrorType.NotFound);
+    public static Error NotFound(Guid productId) =>
+        Error.NotFound(
+            "Product.NotFound",
+            $"The product with identifier \"{productId}\" was not found."
+        );
 }

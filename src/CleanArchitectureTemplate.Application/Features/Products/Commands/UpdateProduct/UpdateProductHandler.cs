@@ -5,15 +5,15 @@ namespace CleanArchitectureTemplate.Application.Features.Products.Commands.Updat
 internal sealed class UpdateProductHandler(
     IAppDbContext dbContext,
     ILogger<UpdateProductHandler> logger
-) : IRequestHandler<UpdateProductCommand>
+) : IRequestHandler<UpdateProductCommand, Result>
 {
-    public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         Product? product = await dbContext.Products.FindAsync([request.Id], cancellationToken);
 
         if (product is null)
         {
-            throw new AppException(ProductErrors.ProductNotFound(request.Id));
+            return Result.Failure(ProductErrors.NotFound(request.Id));
         }
 
         product.Update(
@@ -23,6 +23,8 @@ internal sealed class UpdateProductHandler(
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Successfully updated {@Product}", product);
+        logger.LogDebug("Successfully updated {@Product}", product);
+
+        return Result.Success();
     }
 }

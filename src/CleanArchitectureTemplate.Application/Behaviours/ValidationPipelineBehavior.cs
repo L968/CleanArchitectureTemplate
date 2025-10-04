@@ -1,4 +1,6 @@
-﻿using FluentValidation.Results;
+﻿using System.Reflection;
+
+using FluentValidation.Results;
 
 namespace CleanArchitectureTemplate.Application.Behaviours;
 
@@ -14,12 +16,31 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(
     {
         ValidationFailure[] validationFailures = await ValidateAsync(request);
 
-        if (validationFailures.Length > 0)
+        if (validationFailures.Length == 0)
         {
-            throw new ValidationException(validationFailures);
+            return await next(cancellationToken);
         }
 
-        return await next(cancellationToken);
+        ValidationError validationError = CreateValidationError(validationFailures);
+
+        if (typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
+        {
+            Type resultType = typeof(TResponse).GetGenericArguments()[0];
+            MethodInfo? failureMethod = typeof(Result<>)
+                .MakeGenericType(resultType)
+                .GetMethod(nameof(Result<object>.ValidationFailure), BindingFlags.Public | BindingFlags.Static);
+
+            if (failureMethod is not null)
+            {
+                return (TResponse)failureMethod.Invoke(null, [validationError]);
+            }
+        }
+        else if (typeof(TResponse) == typeof(Result))
+        {
+            return (TResponse)(object)Result.Failure(validationError);
+        }
+
+        throw new ValidationException(validationFailures);
     }
 
     private async Task<ValidationFailure[]> ValidateAsync(TRequest request)
@@ -41,4 +62,7 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(
 
         return validationFailures;
     }
+
+    private static ValidationError CreateValidationError(ValidationFailure[] validationFailures) =>
+        new(validationFailures.Select(f => Error.Problem(f.ErrorCode, f.ErrorMessage)).ToArray());
 }

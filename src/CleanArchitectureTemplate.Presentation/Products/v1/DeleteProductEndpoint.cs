@@ -6,11 +6,16 @@ internal sealed class DeleteProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("product/{id:Guid}", async (Guid id, ISender mediator, CancellationToken cancellationToken) =>
-        {
-            await mediator.Send(new DeleteProductCommand(id), cancellationToken);
-            return Results.NoContent();
-        })
+        app.MapDelete("products/{id:Guid}",
+            async (
+                Guid id,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                Result result = await sender.Send(new DeleteProductCommand(id), cancellationToken);
+
+                return result.Match(Results.NoContent, ApiResults.Problem);
+            })
         .WithTags(Tags.Products)
         .MapToApiVersion(1);
     }

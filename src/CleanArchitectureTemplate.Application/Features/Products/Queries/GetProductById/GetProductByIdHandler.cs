@@ -5,9 +5,9 @@ namespace CleanArchitectureTemplate.Application.Features.Products.Queries.GetPro
 internal sealed class GetProductByIdHandler(
     IAppDbContext dbContext,
     ILogger<GetProductByIdHandler> logger
-) : IRequestHandler<GetProductByIdQuery, GetProductByIdResponse>
+) : IRequestHandler<GetProductByIdQuery, Result<GetProductByIdResponse>>
 {
-    public async Task<GetProductByIdResponse> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetProductByIdResponse>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         Product? product = await dbContext.Products
             .AsNoTracking()
@@ -15,15 +15,17 @@ internal sealed class GetProductByIdHandler(
 
         if (product is null)
         {
-            throw new AppException(ProductErrors.ProductNotFound(request.Id));
+            return Result.Failure(ProductErrors.NotFound(request.Id));
         }
 
-        logger.LogInformation("Successfully retrieved  Product with Id {Id}", request.Id);
+        logger.LogDebug("Successfully retrieved Product with Id {Id}", request.Id);
 
-        return new GetProductByIdResponse(
+        var response = new GetProductByIdResponse(
             product.Id,
             product.Name,
             product.Price
         );
+
+        return Result.Success(response);
     }
 }

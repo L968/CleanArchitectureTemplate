@@ -6,14 +6,26 @@ internal sealed class UpdateProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("product/{id:Guid}", async (Guid id, UpdateProductCommand command, ISender sender, CancellationToken cancellationToken) =>
-        {
-            command.Id = id;
-            await sender.Send(command, cancellationToken);
+        app.MapPut("products/{id:Guid}",
+            async (
+                Guid id,
+                UpdateProductRequest request,
+                ISender sender,
+                CancellationToken cancellationToken) =>
+            {
+                var command = new UpdateProductCommand(
+                    id,
+                    request.Name,
+                    request.Price
+                );
 
-            return Results.NoContent();
-        })
+                Result result = await sender.Send(command, cancellationToken);
+
+                return result.Match(Results.NoContent, ApiResults.Problem);
+            })
         .WithTags(Tags.Products)
         .MapToApiVersion(1);
     }
+
+    internal sealed record UpdateProductRequest(string Name, decimal Price);
 }

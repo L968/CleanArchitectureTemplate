@@ -1,5 +1,6 @@
 ﻿using CleanArchitectureTemplate.Application.Features.Products.Commands.DeleteProduct;
 using CleanArchitectureTemplate.Domain.Products;
+using CleanArchitectureTemplate.Domain.Results;
 
 namespace CleanArchitectureTemplate.UnitTests.Application.Products.Commands;
 
@@ -28,25 +29,29 @@ public class DeleteProductTests : IClassFixture<AppDbContextFixture>
         await _dbContext.Products.AddAsync(existingProduct);
         await _dbContext.SaveChangesAsync();
 
-        var command = new DeleteProductCommand(Id: existingProduct.Id);
+        var command = new DeleteProductCommand(existingProduct.Id);
 
         // Act
-        await _handler.Handle(command, CancellationToken.None);
+        Result result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Product? deletedProduct = await _dbContext.Products.FindAsync(existingProduct.Id);
+        Assert.True(result.IsSuccess, "Expected deletion to succeed");
+
+        Product? deletedProduct = await _dbContext.Products.FindAsync([existingProduct.Id], CancellationToken.None);
         Assert.Null(deletedProduct);
     }
 
     [Fact]
-    public async Task WhenProductDoesNotExist_ShouldThrowAppException()
+    public async Task WhenProductDoesNotExist_ShouldReturnFailure()
     {
         // Arrange
-        var command = new DeleteProductCommand(Id: Guid.NewGuid());
+        var command = new DeleteProductCommand(Guid.NewGuid());
 
-        // Act & Assert
-        AppException exception = await Assert.ThrowsAsync<AppException>(() => _handler.Handle(command, CancellationToken.None));
-        Assert.Equal(ProductErrors.ProductNotFound(command.Id).Message, exception.Message);
-        Assert.Equal(ErrorType.NotFound, exception.ErrorType);
+        // Act
+        Result result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.False(result.IsSuccess, "Expected result to be failure");
+        Assert.Equal("Product.NotFound", result.Error.Code);
     }
 }

@@ -5,15 +5,14 @@ namespace CleanArchitectureTemplate.Application.Features.Products.Commands.Creat
 internal sealed class CreateProductHandler(
     IAppDbContext dbContext,
     ILogger<CreateProductHandler> logger
-) : IRequestHandler<CreateProductCommand, CreateProductResponse>
+) : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
 {
-    public async Task<CreateProductResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         bool existingProduct = await dbContext.Products.AnyAsync(p => p.Name == request.Name, cancellationToken);
-
         if (existingProduct)
         {
-            throw new AppException(ProductErrors.ProductAlreadyExists(request.Name));
+            return Result.Failure(ProductErrors.ProductAlreadyExists(request.Name));
         }
 
         var product = new Product(
@@ -24,12 +23,14 @@ internal sealed class CreateProductHandler(
         dbContext.Products.Add(product);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Successfully created {@Product}", product);
+        logger.LogDebug("Successfully created {@Product}", product);
 
-        return new CreateProductResponse(
-            product.Id,
-            product.Name,
-            product.Price
+        return Result.Success(
+            new CreateProductResponse(
+                product.Id,
+                product.Name,
+                product.Price
+            )
         );
     }
 }

@@ -3,4 +3,4 @@
 public sealed record CreateProductCommand(
     string Name,
     decimal Price
-) : IRequest<CreateProductResponse>;
+) : IRequest<Result<CreateProductResponse>>;

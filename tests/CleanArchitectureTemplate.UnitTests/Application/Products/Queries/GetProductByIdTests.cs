@@ -1,5 +1,6 @@
 using CleanArchitectureTemplate.Application.Features.Products.Queries.GetProductById;
 using CleanArchitectureTemplate.Domain.Products;
+using CleanArchitectureTemplate.Domain.Results;
 
 namespace CleanArchitectureTemplate.UnitTests.Application.Products.Queries;
 
@@ -28,27 +29,30 @@ public class GetProductByIdTests : IClassFixture<AppDbContextFixture>
         await _dbContext.Products.AddAsync(existingProduct);
         await _dbContext.SaveChangesAsync();
 
-        var query = new GetProductByIdQuery(Id: existingProduct.Id);
+        var query = new GetProductByIdQuery(existingProduct.Id);
 
         // Act
-        GetProductByIdResponse result = await _handler.Handle(query, CancellationToken.None);
+        Result<GetProductByIdResponse> result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal(existingProduct.Id, result.Id);
-        Assert.Equal("Test Product", result.Name);
-        Assert.Equal(100m, result.Price);
+        Assert.True(result.IsSuccess, "Expected result to be successful");
+        Assert.NotNull(result.Value);
+        Assert.Equal(existingProduct.Id, result.Value!.Id);
+        Assert.Equal("Test Product", result.Value.Name);
+        Assert.Equal(100m, result.Value.Price);
     }
 
     [Fact]
-    public async Task WhenProductDoesNotExist_ShouldThrowAppException()
+    public async Task WhenProductDoesNotExist_ShouldReturnFailure()
     {
         // Arrange
-        var query = new GetProductByIdQuery(Id: Guid.NewGuid());
+        var query = new GetProductByIdQuery(Guid.NewGuid());
 
-        // Act & Assert
-        AppException exception = await Assert.ThrowsAsync<AppException>(() => _handler.Handle(query, CancellationToken.None));
-        Assert.Equal(ProductErrors.ProductNotFound(query.Id).Message, exception.Message);
-        Assert.Equal(ErrorType.NotFound, exception.ErrorType);
+        // Act
+        Result<GetProductByIdResponse> result = await _handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.False(result.IsSuccess, "Expected result to be failure");
+        Assert.Equal("Product.NotFound", result.Error.Code);
     }
 }
