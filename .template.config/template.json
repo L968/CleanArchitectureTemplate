@@ -9,7 +9,7 @@
   "identity": "CleanArchitecture.Template",
   "name": "Clean Architecture Template",
   "shortName": "cleanarchitecture-template",
-  "sourceName": "CleanArchitecture",
+  "sourceName": "CleanArchitectureTemplate",
   "defaultName": "CleanArchitectureProject",
   "preferNameDirectory": true,
   "tags": {
