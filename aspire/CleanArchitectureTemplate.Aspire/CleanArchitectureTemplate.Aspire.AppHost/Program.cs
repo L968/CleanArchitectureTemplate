@@ -5,7 +5,7 @@ IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(ar
 IResourceBuilder<ParameterResource> postgresPassword = builder.AddParameter("postgresPassword", "root", secret: true);
 
 IResourceBuilder<PostgresServerResource> postgres = builder.AddPostgres(ServiceNames.Postgres, password: postgresPassword)
-    .WithImageTag("17.4")
+    .WithImageTag("18.0")
     .WithPgWeb()
     .WithLifetime(ContainerLifetime.Persistent);
 
